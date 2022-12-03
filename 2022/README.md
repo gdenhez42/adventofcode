@@ -4,7 +4,7 @@ My colleagues and I challenged ourselves to learn new languages and the Advent o
 
 * [Day 1](https://adventofcode.com/2022/day/1): java
 * [Day 2](https://adventofcode.com/2022/day/2): C
-3. Python
+* [Day 3](https://adventofcode.com/2022/day/3): Python
 4. C++
 5. VB.NET
 6. C#
