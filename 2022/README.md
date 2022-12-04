@@ -2,10 +2,10 @@
 
 My colleagues and I challenged ourselves to learn new languages and the Advent of Code 2022 was a great opportunity to do so 😊
 
-* [Day 1](https://adventofcode.com/2022/day/1): java
-* [Day 2](https://adventofcode.com/2022/day/2): C
-* [Day 3](https://adventofcode.com/2022/day/3): Python
-4. C++
+1. [Day 1](https://adventofcode.com/2022/day/1): java
+2. [Day 2](https://adventofcode.com/2022/day/2): C
+3. [Day 3](https://adventofcode.com/2022/day/3): Python
+4. [Day 4](https://adventofcode.com/2022/day/4): C++
 5. VB.NET
 6. C#
 7. PHP
