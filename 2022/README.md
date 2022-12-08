@@ -8,7 +8,7 @@ My colleagues and I challenged ourselves to learn new languages and the Advent o
 4. [Day 4](https://adventofcode.com/2022/day/4): C++
 5. [Day 5](https://adventofcode.com/2022/day/5): VB.NET
 6. [Day 6](https://adventofcode.com/2022/day/6): C#
-7. PHP
+7. [Day 7](https://adventofcode.com/2022/day/7): PHP
 8. JavaScript
 9. Bash
 10. Haskell
