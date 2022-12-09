@@ -1,0 +1,124 @@
+<html>
+
+<body>
+    <script>
+        
+        var isVisible = function(grid, x, y) {
+            let upVisible = true;
+            for (let i=0; i<y; i++) {
+                if (grid[i][x] >= grid[y][x]) {
+                    upVisible = false;
+                }
+            }
+
+            let downVisible = true;
+            for (let i=y+1; i<grid.length; i++) {
+                if (grid[i][x] >= grid[y][x]) {
+                    downVisible = false;
+                }
+            }
+
+            let leftVisible = true;
+            for (let i=0; i<x; i++) {
+                if (grid[y][i] >= grid[y][x]) {
+                    leftVisible = false;
+                }
+            }
+
+            let rightVisible = true;
+            for (let i=x+1; i<grid[y].length; i++) {
+                if (grid[y][i] >= grid[y][x]) {
+                    rightVisible = false;
+                }
+            }
+            return upVisible || downVisible || leftVisible || rightVisible;
+        };
+
+        var scenicScore = function(grid, x, y) {
+            let upScore = 0;
+            for (let i=y-1; i>=0; i--) {
+                upScore += 1;
+                if (grid[i][x] >= grid[y][x]) {
+                    break;
+                }
+            }
+
+            let downScore = 0;
+            for (let i=y+1; i<grid.length; i++) {
+                downScore += 1;
+                if (grid[i][x] >= grid[y][x]) {
+                    break;
+                }
+            }
+
+            let leftScore = 0;
+            for (let i=x-1; i>=0; i--) {
+                leftScore += 1;
+                if (grid[y][i] >= grid[y][x]) {
+                    break;
+                }
+            }
+
+            let rightScore = 0;
+            for (let i=x+1; i<grid[y].length; i++) {
+                rightScore += 1;
+                if (grid[y][i] >= grid[y][x]) {
+                    break;
+                }
+            }
+            return upScore * downScore * leftScore * rightScore;
+        }
+
+        var solve_part1 = function(input) {
+            grid = input.split("\n").map(ey => ey.split("").map(ex => parseInt(ex)));
+
+            let nbVisible = 0;
+            for (let y = 0; y < grid.length; y++) {
+                for (let x = 0; x < grid[y].length; x++)
+                {
+                    if (isVisible(grid, x, y)) {
+                        nbVisible++;
+                    }
+                }
+            }
+            return nbVisible;
+        };
+
+        var solve_part2 = function(input) {
+            grid = input.split("\n").map(ey => ey.split("").map(ex => parseInt(ex)));
+
+            let maxScore = 0;
+            for (let y = 0; y < grid.length; y++) {
+                for (let x = 0; x < grid[y].length; x++)
+                {
+                    let score = scenicScore(grid, x, y)
+                    if (score > maxScore) {
+                        maxScore = score;
+                    }
+                }
+            }
+            return maxScore;
+        };
+
+        var openFile = function (event) {
+            var input = event.target;
+
+            var reader = new FileReader();
+            reader.onload = function () {
+                var text = reader.result;
+                var node1 = document.getElementById('output_part1');
+                node1.innerText = solve_part1(text);
+                var node2 = document.getElementById('output_part2');
+                node2.innerText = solve_part2(text);
+            };
+            reader.readAsText(input.files[0]);
+        };
+    </script>
+
+    <p>Day 8!!</p>
+    <input type='file' accept='text/plain' onchange='openFile(event)'><br>
+    <p>Part 1: <div id='output_part1'></div></p>
+    <p>Part 2: <div id='output_part2'></div></p>
+</body>
+
+</html>
