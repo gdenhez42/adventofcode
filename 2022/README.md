@@ -12,7 +12,7 @@ My colleagues and I challenged ourselves to learn new languages and the Advent o
 8. [Day 8](https://adventofcode.com/2022/day/8): JavaScript
 9. [Day 9](https://adventofcode.com/2022/day/9): Bash
 10. [Day 10](https://adventofcode.com/2022/day/10): Haskell
-11. Go
+11. [Day 11](https://adventofcode.com/2022/day/11): Go
 12. Delphi/Pascal
 13. Ruby
 14. FoxPro
