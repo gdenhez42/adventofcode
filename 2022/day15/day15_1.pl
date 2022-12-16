@@ -23,7 +23,6 @@ foreach my $line (@lines) {
     });
 }
 
-# part1
 my $y = 2000000;
 my %positions = ();
 foreach (@sensors) {
