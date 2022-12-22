@@ -18,7 +18,7 @@ My colleagues and I challenged ourselves to learn new languages and the Advent o
 14. [Day 14](https://adventofcode.com/2022/day/14): FoxPro
 15. [Day 15](https://adventofcode.com/2022/day/15): Perl
 16. [Day 16](https://adventofcode.com/2022/day/16): Rust
-17. Erlang
+17. [Day 17](https://adventofcode.com/2022/day/17): Erlang
 18. Clojure
 19. OCAML
 20. F#
