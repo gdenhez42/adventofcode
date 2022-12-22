@@ -64,14 +64,9 @@ simulate_falling_rock(CaveAbove, CaveBelow, Rock, Jets) ->
             simulate_falling_rock([CRow | CaveAbove], NewCaveBelow, NewRock, NewJets)
     end.
 
-remove_useless_cave([], _, NewCave) -> {0, lists:reverse(NewCave)};
-remove_useless_cave(Removed, 127, NewCave) -> {length(Removed), lists:reverse(NewCave)};
-remove_useless_cave([CRow|Cave], SoFar, NewCave) ->
-    remove_useless_cave(Cave, SoFar bor CRow, [CRow | NewCave]).
-
-simulate_falling_rocks(Cave, _, _, L, 0) ->
-    length(Cave) + L;
-simulate_falling_rocks(Cave, Jets, Rocks, L, Nb) ->
+simulate_falling_rocks(Cave, Jets, Rocks, 0) ->
+    {Cave, Jets, Rocks};
+simulate_falling_rocks(Cave, Jets, Rocks, Nb) ->
     
     {Rock, NewRocks} = next_rock(Rocks),
 
@@ -83,12 +78,48 @@ simulate_falling_rocks(Cave, Jets, Rocks, L, Nb) ->
 
     {NewJets, NewCave} = simulate_falling_rock([], CaveWithRocksAbove, Rock, Jets),
 
-    {NewL, CleanedCave} = remove_useless_cave(NewCave, 0, []),
+    simulate_falling_rocks(NewCave, NewJets, NewRocks, Nb-1).
 
-    simulate_falling_rocks(CleanedCave, NewJets, NewRocks, NewL+L, Nb-1).
+
+find_repeat_idx(_, []) -> false;
+find_repeat_idx({BigCave, Jets, BigNb}=E, [{SmallCave, Jets, SmallNb} | Memo]) ->
+    BigCaveLen = length(BigCave),
+    SmallCaveLen = length(SmallCave),
+    Diff = BigCaveLen - SmallCaveLen,
+    case Diff >= SmallCaveLen of
+        true -> find_repeat_idx(E, Memo);
+        false ->
+            PotentialRepeatBig = lists:sublist(BigCave, 1, Diff),
+            StartBig = lists:sublist(BigCave, Diff*2 + 1, BigCaveLen),
+            PotentialRepeatSmall = lists:sublist(SmallCave, 1, Diff),
+            StartSmall = lists:sublist(SmallCave, Diff + 1, SmallCaveLen),
+            case {PotentialRepeatBig, StartBig} of
+                {PotentialRepeatSmall, StartSmall} -> {SmallNb, BigNb-SmallNb, Diff};
+                _ -> find_repeat_idx(E, Memo)
+            end
+    end;
+find_repeat_idx(E, [_ | Memo]) -> find_repeat_idx(E, Memo).
+
+find_repeat(Cave, Jets, Rocks, Nb, Memo) ->
+    {NewCave, NewJets, NewRocks} = simulate_falling_rocks(Cave, Jets, Rocks, 5),
+    case find_repeat_idx({NewCave, NewJets, Nb+5}, Memo) of
+        false -> find_repeat(NewCave, NewJets, NewRocks, Nb + 5, [{NewCave, NewJets, Nb+5} | Memo]);
+        Idx -> Idx
+    end.
+
+cave_heigth(Jets, Rocks, Nb) ->
+    {NewCave, _, _} = simulate_falling_rocks([], Jets, Rocks, Nb),
+    length(NewCave).
 
 part2() ->
-    {ok, ContentBin} = file:read_file("input_test.txt"),
+    {ok, ContentBin} = file:read_file("input.txt"),
     JetPattern = binary:bin_to_list(ContentBin),
     RockShapes = [[30], [8, 28, 8], [4, 4, 28], [16, 16, 16, 16], [24, 24]],
-    simulate_falling_rocks([], {JetPattern, JetPattern}, {RockShapes, RockShapes}, 0, 10000000).
+    Jets = {JetPattern, JetPattern},
+    Rocks = {RockShapes, RockShapes},
+    {NbRockInit, NbRockRepeat, HeightRepeat} = find_repeat([], Jets, Rocks, 0, []),
+    NbRockTotal = 1000000000000,
+    NbRockRem = (NbRockTotal - NbRockInit) rem NbRockRepeat,
+    HeightRem = cave_heigth(Jets, Rocks, NbRockInit + NbRockRem),
+    ((NbRockTotal - NbRockInit) div NbRockRepeat) * HeightRepeat + HeightRem.
+
