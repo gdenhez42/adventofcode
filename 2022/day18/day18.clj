@@ -7,7 +7,7 @@
 (defn read_input []
   (map read_coordinate
    (clojure.string/split-lines
-   (slurp "/home/gdenhez/git/adventofcode/2022/day18/input.txt"))))
+   (slurp "/home/gdenhez/git/adventofcode/2022/day18/input_test.txt"))))
 
 (def input (read_input))
 
@@ -71,3 +71,7 @@
 
 ;; part 1
 (+ nb_tiles_x nb_tiles_y nb_tiles_z)
+
+
+
+
