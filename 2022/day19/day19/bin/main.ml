@@ -147,23 +147,39 @@ let is_different_or_more_robots (elem: inventory) (elem2: inventory) =
   elem2.obsidian != elem.obsidian ||
   elem2.geode != elem.geode
 
-let rec filter_worst_results (is: inventory list) (result: inventory list) =
+let is_indeniably_better (elem: inventory) (elem2: inventory) =
+  elem2.ore_robot <= elem.ore_robot &&
+  elem2.clay_robot <= elem.clay_robot &&
+  elem2.obsidian_robot <= elem.obsidian_robot &&
+  elem2.geode_robot <= elem.geode_robot &&
+  elem2.ore <= elem.ore &&
+  elem2.clay <= elem.clay &&
+  elem2.obsidian <= elem.obsidian &&
+  elem2.geode <= elem.geode
+
+
+let rec filter_bad_duplicates (is: inventory list) (result: inventory list) =
   match is with
   | [] -> result
   | elem :: rst ->
     if List.for_all (fun elem2 -> 
-      (is_different_or_more_resource elem elem2) && (is_different_or_more_robots elem elem2)) (List.append rst result) then
-        (filter_worst_results rst (elem :: result)) else (filter_worst_results rst result)
+      (is_different_or_more_resource elem elem2) &&
+      (is_different_or_more_robots elem elem2) &&
+      (Bool.not (is_indeniably_better elem2 elem))) (List.append rst result) then
+        (filter_bad_duplicates rst (elem :: result)) else (filter_bad_duplicates rst result)
 
-let filter_bad_result (is: inventory list) =
-  filter_worst_results is []
+let filter_results min (is: inventory list) =
+  let max_geode_get = if min < 2 then 0 else (min-1)*(min-2)/2 in
+  let max_geode = List.fold_left (fun acc elem -> let g = elem.geode + min*elem.geode_robot in if acc < g then g else acc) 0 is in
+  let filtered = List.filter (fun elem -> elem.geode + min*elem.geode_robot + max_geode_get >= max_geode) is in
+  filter_bad_duplicates filtered []
 
 let rec turns min (b: blueprint) (is: inventory list) =
   match min with
   | 0 -> is
-  | _ -> turns (min-1) b (filter_bad_result (List.concat (List.map (turn b) is)))
+  | _ -> turns (min-1) b (filter_results min (List.concat (List.map (turn b) is)))
 
-let _quality_level_part1 (b: blueprint) =
+let quality_level_part1 (b: blueprint) =
   let potential_strats = (turns 24 b [{ore = 0; clay = 0; obsidian = 0; geode = 0; ore_robot = 1; clay_robot = 0; obsidian_robot = 0; geode_robot = 0}]) in
   List.fold_left max 0 (List.map (fun elem -> elem.geode) potential_strats)
 
@@ -171,9 +187,14 @@ let quality_level_part2 (b: blueprint) =
   let potential_strats = (turns 32 b [{ore = 0; clay = 0; obsidian = 0; geode = 0; ore_robot = 1; clay_robot = 0; obsidian_robot = 0; geode_robot = 0}]) in
   List.fold_left max 0 (List.map (fun elem -> elem.geode) potential_strats)
 
-let _total_quality (input : blueprint array) =
-  let tpl = Array.fold_left (fun acc elem -> ((fst acc) + 1, (snd acc) + (fst acc)*(_quality_level_part1 elem))) (1, 0) input in
+let part1 (input : blueprint array) =
+  let tpl = Array.fold_left (fun acc elem -> ((fst acc) + 1, (snd acc) + (fst acc)*(quality_level_part1 elem))) (1, 0) input in
   (snd tpl)
 
+let part2 (input: blueprint array) =
+  (quality_level_part2 input.(0)) * (quality_level_part2 input.(1)) * (quality_level_part2 input.(2))
+
 let () =
-  Format.printf "%d\n" (quality_level_part2 (read_input ()).(0));;
+  let input = (read_input ()) in
+  Format.printf "part1: %d\n" (part1 input);
+  Format.printf "part2: %d\n" (part2 input);;
