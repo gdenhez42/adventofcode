@@ -21,7 +21,7 @@ My colleagues and I challenged ourselves to learn new languages and the Advent o
 17. [Day 17](https://adventofcode.com/2022/day/17): Erlang
 18. [Day 18](https://adventofcode.com/2022/day/18): Clojure
 19. [Day 19](https://adventofcode.com/2022/day/19): OCAML
-20. F#
+20. [Day 20](https://adventofcode.com/2022/day/20): F#
 21. Scala
 22. Lisp
 23. Groovy
