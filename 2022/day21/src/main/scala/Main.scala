@@ -54,6 +54,33 @@ def part1 (monkeys : List[Monkey]) : Long =
   }
   vals.get("root").get
 
-@main def day21: Unit = 
-  println(part1 (readInput()))
+def part2 (monkeys : List[Monkey]) : Long =
+  val vals = scala.collection.mutable.Map[String, Long]()
+  for (monkey <- monkeys) {
+    if (monkey.t == "yell" && monkey.name != "humn") vals(monkey.name) = monkey.asInstanceOf[YellMonkey].value
+  }
+  var found = true
+  while (found) {
+    found = false
+
+    for (monkey <- monkeys) {
+      monkey match
+        case math: MathMonkey =>
+          (vals.get(math.name), vals.get(math.leftMonkey), vals.get(math.rightMonkey)) match
+            case (None, Some(v1), Some(v2)) =>
+              vals(math.name) = doSomeMath(v1, v2, math.op)
+              found = true
+            case _ => ()
+        case _ => ()
+    }
+  }
+
+  println("vals: " + vals.get("gvfh") + " " + vals.get("njlw"))
+
+  42
+
+@main def day21: Unit =
+  val input = readInput()
+  println("Part1: " + (part1(input)))
+  println("Part2: " + (part2(input)))
 
