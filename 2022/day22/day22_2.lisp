@@ -204,5 +204,3 @@
         (write (+ (* 1000 row) (* 4 col) final_facing))
     )
 )
-
-; too low 161037
