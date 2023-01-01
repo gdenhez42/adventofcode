@@ -63,7 +63,23 @@
     )
 )
 
+(defun rotate-left (d)
+    (case d
+        (#\> #\^)
+        (#\^ #\<)
+        (#\< #\v)
+        (#\v #\>)
+    )
+)
 
+(defun rotate-right (d)
+    (case d
+        (#\> #\v)
+        (#\^ #\>)
+        (#\< #\^)
+        (#\v #\<)
+    )
+)
 
 
 (defvar input (read_input))
@@ -73,11 +89,22 @@
 (terpri)
 
 
-(let ( (p path) (d ">") (pos starting_pos))
+(let ( (p path) (d #\>) (pos starting_pos))
     (loop while (string/= "" p)
         do
         (let ( (c (read-path p)) )
+            (case (aref (command-current c) 0)
+                (#\L (setf d (rotate-left d)))
+                (#\R (setf d (rotate-right d)))
+                (t (write "move!"))
+            )
+
             (write (command-current c))
+            (terpri)
+            (write d)
+            (terpri)
+            (write pos)
+            (terpri)
             (terpri)
             (setf p (command-rest c))
         )
