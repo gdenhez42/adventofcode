@@ -1,8 +1,12 @@
 (defstruct coord 
-   x
-   y
+    x
+    y
 )
 
+(defstruct command
+    current
+    rest
+)
 
 (defun read_input ()
     (let ((in (open "input_test.txt" :if-does-not-exist nil)) (input (list)))
@@ -38,22 +42,44 @@
     )
 )
 
-(defun find-first-non-space (board)
+(defun find-starting-pos (board)
     (let ((j 0))
         (loop while (char= (aref board 0 j) #\space)
             do (setf j (+ j 1))
         )
-        (write (aref board 0 j))
         (make-coord :x j :y 0)
     )
 )
+
+(defun read-path (path)
+    (let ( (l (length path)) (i 0) )
+        (loop while (and (< i l) (char>= (aref path i) #\0) (char<= (aref path i) #\9))
+            do (setf i (+ i 1))
+        )
+        (case i
+            (0 (make-command :current (subseq path 0 1) :rest (subseq path 1)))
+            (t (make-command :current (subseq path 0 i) :rest (subseq path i)))
+        )
+    )
+)
+
+
 
 
 (defvar input (read_input))
 (defvar path (car input))
 (defvar board (build_board input))
-(defvar starting_pos (find-first-non-space board))
+(defvar starting_pos (find-starting-pos board))
 (terpri)
 
 
-(write board)
+(let ( (p path) (d ">") (pos starting_pos))
+    (loop while (string/= "" p)
+        do
+        (let ( (c (read-path p)) )
+            (write (command-current c))
+            (terpri)
+            (setf p (command-rest c))
+        )
+    )
+)
