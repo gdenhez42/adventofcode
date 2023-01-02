@@ -24,6 +24,6 @@ My colleagues and I challenged ourselves to learn new languages and the Advent o
 20. [Day 20](https://adventofcode.com/2022/day/20): F#
 21. [Day 21](https://adventofcode.com/2022/day/21): Scala
 22. [Day 22](https://adventofcode.com/2022/day/22): Lisp
-23. Groovy
+23. [Day 23](https://adventofcode.com/2022/day/23): Groovy
 24. Ada
 25. PowerShell
