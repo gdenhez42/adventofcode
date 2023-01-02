@@ -1,5 +1,5 @@
 // execute with groovy day23.groovy
-filename = 'input_test_tiny.txt'
+filename = 'input.txt'
 
 File fh = new File(filename)
 def lines = fh.readLines()
@@ -15,6 +15,7 @@ for (int y = 0; y < lines.size(); y++) {
 def elfMoved = true
 def directions = ["N", "S", "W", "E"]
 def first_direction = 0
+def nb_round = 0
 while (elfMoved) {
     elfMoved = false
 
@@ -75,9 +76,51 @@ while (elfMoved) {
         }
     }
 
-    print proposed
-    print "\n"
-
     // Second half: move!
+    for (p in proposed) {
+        if (p.value.size() == 1) {
+            elfs.remove(p.value[0])
+            elfs[p.key] = 1
+            elfMoved = true
+        }
+    }
 
+    // Change first direction
+    first_direction = (first_direction + 1) % directions.size()
+
+    // Part 1 result
+    nb_round += 1
+    if (nb_round == 10) {
+        def firstElf = elfs.entrySet().iterator().next()
+        def minX = firstElf.getKey().get(0)
+        def maxX = firstElf.getKey().get(0)
+        def minY = firstElf.getKey().get(1)
+        def maxY = firstElf.getKey().get(1)
+
+        for (elf in elfs) {
+            def x = elf.key.get(0)
+            def y = elf.key.get(1)
+            if (x < minX) {
+                minX = x
+            }
+            if (x > maxX) {
+                maxX = x
+            }
+            if (y < minY) {
+                minY = y
+            }
+            if (y > maxY) {
+                maxY = y
+            }
+        }
+
+        def part1 = (maxX - minX + 1) * (maxY - minY + 1) - elfs.size()
+        print "Part 1: "
+        print part1
+        print "\n"
+    }
 }
+
+print "Part 2: "
+print nb_round
+print "\n"
