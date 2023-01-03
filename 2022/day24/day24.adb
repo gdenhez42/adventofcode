@@ -192,4 +192,111 @@ begin
 
     
     Put_Line ("Part 1:" & Integer'Image(Minute));
+
+    Positions := Position_Sets.Empty_Set;
+    Positions.Include(Goal);
+
+    while (not Position_Sets.Contains (Positions, Starting_Point)) loop
+        Moved_Blizzards := Blizzard_Sets.Empty_Set;
+        for E of Blizzards loop
+            Moved_Blizzards.Include (Move_Blizzard (E, Valley_H, Valley_W));
+        end loop;
+        Blizzards := Moved_Blizzards;
+
+        Next_Positions := Position_Sets.Empty_Set;
+        for E of Positions loop
+            -- Consider staying where you are
+            if (not Has_Blizzard (E.X, E.Y, Blizzards)) then
+            Next_Positions.Include ( (E.X, E.Y) );
+            end if;
+
+            -- Consider going left
+            if (E.X > 2 and (E.Y /= 1 and E.Y /= Valley_H)) and
+            (not Has_Blizzard (E.X-1, E.Y, Blizzards)) then
+            Next_Positions.Include ( (E.X-1, E.Y) );
+            end if;
+
+            -- Consider going right
+            if (E.X < Valley_W - 1 and (E.Y /= 1 and E.Y /= Valley_H)) and
+            (not Has_Blizzard (E.X+1, E.Y, Blizzards)) then
+            Next_Positions.Include ( (E.X+1, E.Y) );
+            end if;
+
+            -- Consider going up
+            if (E.Y > 2 or (E.X = 2 and E.Y = 2)) and
+            (not Has_Blizzard (E.X, E.Y-1, Blizzards)) then
+            Next_Positions.Include ( (E.X, E.Y-1) );
+            end if;
+
+            -- Consider going down
+            if (E.Y < Valley_H - 1 or (E.X = Valley_W-1 and E.Y = Valley_H - 1)) and
+            (not Has_Blizzard (E.X, E.Y+1, Blizzards)) then
+            Next_Positions.Include ( (E.X, E.Y+1) );
+            end if;
+        end loop;
+
+        Positions := Next_Positions;
+        Minute := Minute + 1;
+
+        --for E of Positions loop
+        --    Display_Position (E);
+        --end loop;
+        --Put_Line ("");
+        
+    end loop;
+
+    Positions := Position_Sets.Empty_Set;
+    Positions.Include(Starting_Point);
+
+    while (not Position_Sets.Contains (Positions, Goal)) loop
+        Moved_Blizzards := Blizzard_Sets.Empty_Set;
+        for E of Blizzards loop
+            Moved_Blizzards.Include (Move_Blizzard (E, Valley_H, Valley_W));
+        end loop;
+        Blizzards := Moved_Blizzards;
+
+        Next_Positions := Position_Sets.Empty_Set;
+        for E of Positions loop
+            -- Consider staying where you are
+            if (not Has_Blizzard (E.X, E.Y, Blizzards)) then
+            Next_Positions.Include ( (E.X, E.Y) );
+            end if;
+
+            -- Consider going left
+            if (E.X > 2 and (E.Y /= 1 and E.Y /= Valley_H)) and
+            (not Has_Blizzard (E.X-1, E.Y, Blizzards)) then
+            Next_Positions.Include ( (E.X-1, E.Y) );
+            end if;
+
+            -- Consider going right
+            if (E.X < Valley_W - 1 and (E.Y /= 1 and E.Y /= Valley_H)) and
+            (not Has_Blizzard (E.X+1, E.Y, Blizzards)) then
+            Next_Positions.Include ( (E.X+1, E.Y) );
+            end if;
+
+            -- Consider going up
+            if (E.Y > 2 or (E.X = 2 and E.Y = 2)) and
+            (not Has_Blizzard (E.X, E.Y-1, Blizzards)) then
+            Next_Positions.Include ( (E.X, E.Y-1) );
+            end if;
+
+            -- Consider going down
+            if (E.Y < Valley_H - 1 or (E.X = Valley_W-1 and E.Y = Valley_H - 1)) and
+            (not Has_Blizzard (E.X, E.Y+1, Blizzards)) then
+            Next_Positions.Include ( (E.X, E.Y+1) );
+            end if;
+        end loop;
+
+        Positions := Next_Positions;
+        Minute := Minute + 1;
+
+        --for E of Positions loop
+        --    Display_Position (E);
+        --end loop;
+        --Put_Line ("");
+        
+    end loop;
+
+    Put_Line ("Part 2:" & Integer'Image(Minute));
+
 end day24;
