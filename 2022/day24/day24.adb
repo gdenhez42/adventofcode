@@ -182,11 +182,6 @@ begin
 
         Positions := Next_Positions;
         Minute := Minute + 1;
-
-        --for E of Positions loop
-        --    Display_Position (E);
-        --end loop;
-        --Put_Line ("");
         
     end loop;
 
@@ -237,11 +232,6 @@ begin
 
         Positions := Next_Positions;
         Minute := Minute + 1;
-
-        --for E of Positions loop
-        --    Display_Position (E);
-        --end loop;
-        --Put_Line ("");
         
     end loop;
 
@@ -289,11 +279,6 @@ begin
 
         Positions := Next_Positions;
         Minute := Minute + 1;
-
-        --for E of Positions loop
-        --    Display_Position (E);
-        --end loop;
-        --Put_Line ("");
         
     end loop;
 
