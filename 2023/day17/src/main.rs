@@ -98,8 +98,90 @@ fn part1(contents: &str) {
     println!("Part1: {:?}", (current_node, distance));
 }
 
-fn part2(_contents: &str) {
-    println!("Part2: {:?}", 42);
+fn part2(contents: &str) {
+    let map = contents.lines().map(|l| l.chars().map(|c| (c as usize) - 48).collect::<Vec<usize>>()).collect::<Vec<Vec<usize>>>();
+    let h = map.len();
+    let w = map[0].len();
+
+    // Good old Dijkstra
+    let mut distances = HashMap::new();
+    let mut visited = HashSet::<Node>::new();
+
+    // First iteration
+    let current_node_1 = Node {
+        x: 0,
+        y: 0,
+        dir: Dir::V
+    };
+    for (n, d) in get_neighbors_ultra(&current_node_1, &map, &visited) {
+        distances.insert(n, d);
+    }
+    let current_node_2 = Node {
+        x: 0,
+        y: 0,
+        dir: Dir::H
+    };
+    for (n, d) in get_neighbors_ultra(&current_node_2, &map, &visited) {
+        distances.insert(n, d);
+    }
+    let mut min_d = None;
+    let mut min_n = None;
+    for (n, d) in &distances {
+        match min_d {
+            None => {
+                min_d = Some(*d);
+                min_n = Some(n.clone());
+            },
+            Some(m) => {
+                if *d < m {
+                    min_d = Some(*d);
+                    min_n = Some(n.clone());
+                }
+            }
+        }
+    }
+    let mut current_node = min_n.unwrap();
+    let mut distance = min_d.unwrap();
+
+    while current_node.x != w-1 || current_node.y != h-1 {
+        // Visited
+        visited.insert(current_node.clone());
+        distances.remove(&current_node);
+
+        // New distances
+        for (n, delta) in get_neighbors_ultra(&current_node, &map, &visited) {
+            let new_d = distance + delta;
+            match distances.get(&n) {
+                Some(d) => {
+                    if new_d < *d {
+                        distances.insert(n, new_d);
+                    }
+                },
+                None => {
+                    distances.insert(n, new_d);
+                }
+            }
+        }
+        
+        let mut min = None;
+        for (n, d) in &distances {
+            match min {
+                None => {
+                    min = Some(*d);
+                    current_node = n.clone();
+                },
+                Some(m) => {
+                    if *d < m {
+                        min = Some(*d);
+                        current_node = n.clone();
+                    }
+                }
+            }
+        }
+        distance = min.unwrap();
+    }
+
+    println!("Part2: {:?}", (current_node, distance));
 }
 
 #[derive(Hash, Eq, PartialEq, Clone, Debug)]
@@ -174,6 +256,82 @@ fn get_neighbors(node: &Node, map: &Vec<Vec<usize>>, visited: &HashSet::<Node>) 
                 };
                 if !visited.contains(&node) {
                     result.push((node, forw));
+                }
+            }
+        }
+
+    }
+
+    result
+}
+
+fn get_neighbors_ultra(node: &Node, map: &Vec<Vec<usize>>, visited: &HashSet::<Node>) -> Vec<(Node, usize)> {
+    let mut result = Vec::new();
+
+    if node.dir == Dir::V {
+        let mut rev = 0;
+        let mut forw = 0;
+
+        for i in 1..11 {
+            if node.x >= i {
+                rev += map[node.y][node.x - i];
+                if i >= 4 {
+                    let node = Node {
+                        x: node.x - i,
+                        y: node.y,
+                        dir: Dir::H
+                    };
+                    if !visited.contains(&node) {
+                        result.push((node, rev));
+                    }
+                }
+            }
+            if node.x + i < map[0].len() {
+                forw += map[node.y][node.x + i];
+                if i >= 4 {
+                    let node = Node {
+                        x: node.x + i,
+                        y: node.y,
+                        dir: Dir::H
+                    };
+                    if !visited.contains(&node) {
+                        result.push((node, forw));
+                    }
+                }
+            }
+        }
+
+    }
+
+    if node.dir == Dir::H {
+        let mut rev = 0;
+        let mut forw = 0;
+
+        for i in 1..11 {
+            if node.y >= i {
+                rev += map[node.y - i][node.x];
+                if i >= 4 {
+                    let node = Node {
+                        x: node.x,
+                        y: node.y - i,
+                        dir: Dir::V
+                    };
+                    if !visited.contains(&node) {
+                        result.push((node, rev));
+                    }
+                }
+            }
+            if node.y + i < map.len() {
+                forw += map[node.y + i][node.x];
+                if i >= 4 {
+                    let node = Node {
+                        x: node.x,
+                        y: node.y + i,
+                        dir: Dir::V
+                    };
+                    if !visited.contains(&node) {
+                        result.push((node, forw));
+                    }
                 }
             }
         }
